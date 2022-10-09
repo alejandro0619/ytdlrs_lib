@@ -2,8 +2,9 @@ use serde::{Deserialize, Serialize};
 // use serde_json; 
 use std::collections::HashMap;
 
+/// Model of the data returned when fetching the video information, quality, and keys.
 #[derive(Serialize, Deserialize, Debug)]
-pub struct APIResponse { 
+pub struct APIResponseInfo { 
     a: String,
     links: Link,
     mess: String,
@@ -18,7 +19,8 @@ pub struct Link {
     mp4: HashMap<String, HashMap<String, String>>,
 }
 
-impl APIResponse {
+impl APIResponseInfo {
+    /// Gets the keys within its quality.
     pub fn get_key_by_quality(&self) -> HashMap<String, String> {
         let mut qualities: HashMap<String, String> = HashMap::new();
 
