@@ -7,5 +7,7 @@ edition = "2021"
 
 [dependencies]
 serde_json = "1.0.85"
-
 serde = {version = "1.0.145", features = ["derive"]}
+reqwest = { version = "*", features = ["json"] }
+tokio = { version = "1.21.2", features = ["full"] }
+dotenv = "0.15.0"
