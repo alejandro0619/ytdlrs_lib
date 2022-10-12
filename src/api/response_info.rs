@@ -18,3 +18,35 @@ pub struct APIResponseInfo {
 pub struct Link {
     pub mp4: HashMap<String, HashMap<String, String>>,
 }
+
+impl APIResponseInfo {
+    /// Gets the keys within its quality.
+    pub fn get_key_by_quality(&self) -> HashMap<String, String> {
+        let mut qualities: HashMap<String, String> = HashMap::new();
+
+        for (_, value) in (self.links.mp4).clone() {
+            // Iter through every video download option
+            let quality = value.get("q").unwrap(); // This should not fail to get the quality
+            let key = value.get("k").unwrap(); // This should not fail (either XD) to get the key
+            qualities.insert(String::from(quality), String::from(key)); // convert to String and insert in the hashmap
+        }
+        qualities
+    }
+}
+// Implement Default for APIResponseInfo
+impl Default for APIResponseInfo {
+    fn default() -> Self {
+        Self {
+            a: String::from(""),
+            links: Link {
+                mp4: HashMap::new(),
+            },
+            mess: String::from(""),
+            p: String::from(""),
+            status: String::from(""),
+            t: 0,
+            title: String::from(""),
+            vid: String::from(""),
+        }
+    }
+}
