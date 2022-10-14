@@ -1,2 +1,2 @@
-pub mod response_info;
 pub mod fetch;
+pub mod response_info;

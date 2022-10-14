@@ -1,10 +1,10 @@
 use serde::{Deserialize, Serialize};
-// use serde_json; 
+// use serde_json;
 use std::collections::HashMap;
 
 /// Model of the data returned when fetching the video information, quality, and keys.
 #[derive(Serialize, Deserialize, Debug)]
-pub struct APIResponseInfo { 
+pub struct APIResponseInfo {
     a: String,
     pub links: Link,
     mess: String,
