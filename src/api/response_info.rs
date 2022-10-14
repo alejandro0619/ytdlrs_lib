@@ -33,20 +33,3 @@ impl APIResponseInfo {
         qualities
     }
 }
-// Implement Default for APIResponseInfo
-impl Default for APIResponseInfo {
-    fn default() -> Self {
-        Self {
-            a: String::from(""),
-            links: Link {
-                mp4: HashMap::new(),
-            },
-            mess: String::from(""),
-            p: String::from(""),
-            status: String::from(""),
-            t: 0,
-            title: String::from(""),
-            vid: String::from(""),
-        }
-    }
-}

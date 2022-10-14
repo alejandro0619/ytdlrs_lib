@@ -11,3 +11,8 @@ serde = {version = "1.0.145", features = ["derive"]}
 reqwest = { version = "*", features = ["json"] }
 tokio = { version = "1.21.2", features = ["full"] }
 dotenv = "0.15.0"
+
+[[bin]]
+name = "ytdlrs_lib"
+path = "src/main.rs"
+
