@@ -1,7 +1,7 @@
 // allow unused fields in struct for now 
 #![allow(dead_code)]
 use super::error::Error;
-use super::response_info;
+use super::response_info::APIResponseInfo;
 use dotenv;
 use envy;
 use reqwest::{header::CONTENT_TYPE, StatusCode};
@@ -28,7 +28,7 @@ pub struct APIClient {
 }
 
 impl APIClient {
-    pub async fn request(&self) -> Result<response_info::APIResponseInfo, Error> {
+    pub async fn request(&self) -> Result<APIResponseInfo, Error> {
         let url_base = self.base_url.url_base_info.clone();
 
         // These are the params, vt = video_type.
@@ -45,7 +45,7 @@ impl APIClient {
             .map_err(|e| Error::RequestError(e))?;
 
         if let StatusCode::OK = response_data.status() {
-            let data = response_data.json::<response_info::APIResponseInfo>().await;
+            let data = response_data.json::<APIResponseInfo>().await;
             match data {
                 Ok(data) => Ok(data),
 
@@ -60,7 +60,7 @@ impl APIClient {
 // implement new for APiCient
 impl APIClient {
     pub fn new(url: String) -> Result<Self, Error> {
-        let base_url = APIConfig::new()?;
+        let base_url: APIConfig = APIConfig::new()?;
         let client = reqwest::Client::new();
         Ok(APIClient {
             client,

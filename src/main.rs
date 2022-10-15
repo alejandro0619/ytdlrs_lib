@@ -9,10 +9,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // match for Info
     match info {
         Ok(info) => {
-            println!("{:#?}", info.get_key_by_quality());
+            match info.get_key_by_quality() {
+                Ok(keys) => {
+                    for (k, v) in keys.iter() {
+                        println!("Quality: {} Key: {}", k, v);
+                    }
+                }
+                Err(e) => println!("Errorrr: {}", e),
+            }
         }
         Err(e) => {
-            println!("Molleja de error hermano: {}", e);
+            println!("owowowow error {}", e);
         }
     }
     Ok(())

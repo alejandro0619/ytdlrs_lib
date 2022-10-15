@@ -18,4 +18,6 @@ pub enum Error {
     DeserializeError,
     #[error("The status code is not 200")]
     StatusCodeError(reqwest::StatusCode),
+    #[error("Error getting the video keys")]
+    VideoKeysError,
 }
