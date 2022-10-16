@@ -1,8 +1,9 @@
-// allow unused fields in struct for now 
+// allow unused fields in struct for now
 #![allow(dead_code)]
-use super::error::Error;
-use super::response_info::APIResponseInfo;
 use super::convert_video::APIResponseConvert;
+use super::error::Error;
+use super::quality::FileType;
+use super::response_info::APIResponseInfo;
 use dotenv;
 use envy;
 use reqwest::header::CONTENT_TYPE;
@@ -17,8 +18,7 @@ pub struct APIConfig {
 impl APIConfig {
     pub fn new() -> Result<Self, Error> {
         dotenv::dotenv().ok();
-        envy::from_env::<APIConfig>()
-        .map_err(|e| Error::EnvError(e))
+        envy::from_env::<APIConfig>().map_err(|e| Error::EnvError(e))
     }
 }
 
@@ -27,16 +27,17 @@ pub struct APIClient {
     url: String,
     base_url: APIConfig,
     vt: String,
-    id: String
+    id: String,
 }
 
 impl APIClient {
     pub async fn fetch_video_info(&mut self) -> Result<APIResponseInfo, Error> {
         let url_base = self.base_url.url_base_info.clone();
 
-        // These are the params, vt = video_type.
-        let params = [("query", self.url.clone()), ("vt", self.vt.clone())];
+        // we check if the file type is mp3 or mp4.
+        let file_type = FileType::get_file_type(&self.vt)?;
 
+        let params: [(&str, String); 2] = [("query", self.url.clone()), ("vt", file_type)]; // params for the request
         let client = &self.client; // Initialize the client
 
         let response_data = client
@@ -49,24 +50,25 @@ impl APIClient {
             .json::<APIResponseInfo>()
             .await
             .map_err(|_| Error::DeserializeError)?; // Tries to deserialize the response data into APIResponseInfo
-        
-            self.id = response_data.get_video_id(); // Get the video id and set it to self.id
 
-            if !response_data.mess.is_empty() {
-                return Err(Error::InvalidResponse);
-            } else {
-                Ok(response_data)
-            }
-        
+        self.id = response_data.get_video_id(); // Get the video id and set it to self.id
+
+        // If the mess is empty means it all went well.
+        if !response_data.mess.is_empty() {
+            return Err(Error::InvalidResponse);
+        } else {
+            Ok(response_data)
+        }
     }
 }
 
 impl APIClient {
-    pub async fn fetch_convert_video(&self, key: &String) -> Result<APIResponseConvert, Error> {
+    pub async fn fetch_convert_video(&self, k: &String) -> Result<APIResponseConvert, Error> {
         let url_base = self.base_url.url_base_download.clone();
 
         // These are the params, vt = video_type.
-        let params = [("vid", self.id.clone()), ("k", key.clone())];
+
+        let params = [("vid", self.id.clone()), ("k", k.clone())];
 
         let client = &self.client; // Initialize the client
 
@@ -80,13 +82,12 @@ impl APIClient {
             .json::<APIResponseConvert>()
             .await
             .map_err(|_| Error::DeserializeError)?; // Tries to deserialize the response data into APIResponseInfo
-        
-            if !response_data.get_mess().is_empty() {
-                return Err(Error::ConvertError);
-            } else {
-                Ok(response_data)
-            }
-        
+
+        if !response_data.get_mess().is_empty() {
+            return Err(Error::ConvertError);
+        } else {
+            Ok(response_data)
+        }
     }
 }
 // implement new for APiCient
@@ -99,7 +100,7 @@ impl APIClient {
             url,
             base_url,
             vt: video_type,
-            id: String::new()
+            id: String::new(), // initialize empty strings for id.
         })
     }
 }

@@ -16,14 +16,14 @@ pub enum Error {
     RequestError(#[from] reqwest::Error),
     #[error("Could not deserialize the data into JSON")]
     DeserializeError,
-    #[error("The status code is not 200")]
-    StatusCodeError(reqwest::StatusCode),
     #[error("Error getting the video keys")]
     VideoKeysError,
     #[error("Invalidd video: Does not exist or is private")]
     InvalidVideo,
     #[error("Error converting the video")]
     ConvertError,
-    #[error("Invalid quality")]
-    InvalidQuality,
+    #[error("Invalid quality: {0}")]
+    InvalidQuality(String),
+    #[error("Invalid file type: {0}")]
+    InvalidFileType(String),
 }

@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use super::error::Error;
+use super::quality::{QualityAudio, QualityVideo, Quality};
 type FormatInfo = HashMap<String, HashMap<String, String>>;
 type VideoKeys = HashMap<String, String>;
 // Model of the data returned when fetching the video information, quality, and keys.
@@ -44,8 +45,11 @@ impl Link {
 }
 
 impl APIResponseInfo {
+    pub fn get_account(&self) -> String {
+        String::from(&self.account)
+    }
     /// Gets the keys within its quality.
-    pub fn get_key_by_quality(&self) -> Result<VideoKeys, Error> {
+    pub fn get_keys_by_quality(&self) -> Result<VideoKeys, Error> {
         match &self.links {
             Link::MP4(info) => Link::get_keys(info),
             Link::MP3(info) => Link::get_keys(info),
@@ -56,11 +60,23 @@ impl APIResponseInfo {
         String::from(&self.title)
     }
 
+    pub fn get_unique_key_by_quality(&self, quality: String) -> Result<String, Error> {
+        let keys = self.get_keys_by_quality()?;
+        // check if quality is in the QualityAudio or QualityVideo
+        
+        match self.links {
+            Link::MP4(_) => {
+               let q = QualityVideo::get_quality(&quality)?;
+                Ok(keys[&q].clone())
+            }
+            Link::MP3(_) => {
+                let q = QualityAudio::get_quality(&quality)?;
+                Ok(keys[&q].clone())
+            }
+        }
+
+    }
     pub fn get_video_id(&self) -> String {
         String::from(&self.vid)
-    }
-
-    pub fn get_account(&self) -> String {
-        String::from(&self.account)
     }
 }
