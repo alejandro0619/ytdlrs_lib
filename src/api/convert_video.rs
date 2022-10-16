@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
-struct APIResponseConvert {
+pub struct APIResponseConvert {
   status: String,
   mess: String,
   c_status: String,
@@ -25,5 +25,8 @@ impl APIResponseConvert {
 
   pub fn file_type(&self) -> String {
     String::from(&self.file_type)
+  }
+  pub fn get_mess(&self) -> String {
+    String::from(&self.mess)
   }
 }

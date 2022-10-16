@@ -22,4 +22,8 @@ pub enum Error {
     VideoKeysError,
     #[error("Invalidd video: Does not exist or is private")]
     InvalidVideo,
+    #[error("Error converting the video")]
+    ConvertError,
+    #[error("Invalid quality")]
+    InvalidQuality,
 }

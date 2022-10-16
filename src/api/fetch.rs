@@ -2,6 +2,7 @@
 #![allow(dead_code)]
 use super::error::Error;
 use super::response_info::APIResponseInfo;
+use super::convert_video::APIResponseConvert;
 use dotenv;
 use envy;
 use reqwest::header::CONTENT_TYPE;
@@ -25,11 +26,12 @@ pub struct APIClient {
     client: reqwest::Client,
     url: String,
     base_url: APIConfig,
-    vt: String
+    vt: String,
+    id: String
 }
 
 impl APIClient {
-    pub async fn fetch_video_info(&self) -> Result<APIResponseInfo, Error> {
+    pub async fn fetch_video_info(&mut self) -> Result<APIResponseInfo, Error> {
         let url_base = self.base_url.url_base_info.clone();
 
         // These are the params, vt = video_type.
@@ -48,6 +50,8 @@ impl APIClient {
             .await
             .map_err(|_| Error::DeserializeError)?; // Tries to deserialize the response data into APIResponseInfo
         
+            self.id = response_data.get_video_id(); // Get the video id and set it to self.id
+
             if !response_data.mess.is_empty() {
                 return Err(Error::InvalidResponse);
             } else {
@@ -57,6 +61,34 @@ impl APIClient {
     }
 }
 
+impl APIClient {
+    pub async fn fetch_convert_video(&self, key: &String) -> Result<APIResponseConvert, Error> {
+        let url_base = self.base_url.url_base_download.clone();
+
+        // These are the params, vt = video_type.
+        let params = [("vid", self.id.clone()), ("k", key.clone())];
+
+        let client = &self.client; // Initialize the client
+
+        let response_data = client
+            .post(url_base)
+            .form(&params)
+            .header(CONTENT_TYPE, "application/json")
+            .send()
+            .await
+            .map_err(|e| Error::RequestError(e))? // Returns error if request fails
+            .json::<APIResponseConvert>()
+            .await
+            .map_err(|_| Error::DeserializeError)?; // Tries to deserialize the response data into APIResponseInfo
+        
+            if !response_data.get_mess().is_empty() {
+                return Err(Error::ConvertError);
+            } else {
+                Ok(response_data)
+            }
+        
+    }
+}
 // implement new for APiCient
 impl APIClient {
     pub fn new(url: String, video_type: String) -> Result<Self, Error> {
@@ -66,7 +98,8 @@ impl APIClient {
             client,
             url,
             base_url,
-            vt: video_type
+            vt: video_type,
+            id: String::new()
         })
     }
 }
