@@ -4,7 +4,7 @@ use super::error::Error;
 use super::response_info::APIResponseInfo;
 use dotenv;
 use envy;
-use reqwest::{header::CONTENT_TYPE, StatusCode};
+use reqwest::header::CONTENT_TYPE;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -25,14 +25,15 @@ pub struct APIClient {
     client: reqwest::Client,
     url: String,
     base_url: APIConfig,
+    vt: String
 }
 
 impl APIClient {
-    pub async fn request(&self) -> Result<APIResponseInfo, Error> {
+    pub async fn fetch_video_info(&self) -> Result<APIResponseInfo, Error> {
         let url_base = self.base_url.url_base_info.clone();
 
         // These are the params, vt = video_type.
-        let params = [("query", self.url.clone()), ("vt", String::from("mp3"))];
+        let params = [("query", self.url.clone()), ("vt", self.vt.clone())];
 
         let client = &self.client; // Initialize the client
 
@@ -42,30 +43,30 @@ impl APIClient {
             .header(CONTENT_TYPE, "application/json")
             .send()
             .await
-            .map_err(|e| Error::RequestError(e))?;
-
-        if let StatusCode::OK = response_data.status() {
-            let data = response_data.json::<APIResponseInfo>().await;
-            match data {
-                Ok(data) => Ok(data),
-
-                Err(_) => Err(Error::DeserializeError),
+            .map_err(|e| Error::RequestError(e))? // Returns error if request fails
+            .json::<APIResponseInfo>()
+            .await
+            .map_err(|_| Error::DeserializeError)?; // Tries to deserialize the response data into APIResponseInfo
+        
+            if !response_data.mess.is_empty() {
+                return Err(Error::InvalidResponse);
+            } else {
+                Ok(response_data)
             }
-        } else { 
-            Err(Error::StatusCodeError(response_data.status()))
-        }
+        
     }
 }
 
 // implement new for APiCient
 impl APIClient {
-    pub fn new(url: String) -> Result<Self, Error> {
+    pub fn new(url: String, video_type: String) -> Result<Self, Error> {
         let base_url: APIConfig = APIConfig::new()?;
         let client = reqwest::Client::new();
         Ok(APIClient {
             client,
             url,
             base_url,
+            vt: video_type
         })
     }
 }

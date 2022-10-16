@@ -4,8 +4,8 @@ use ytdlrs_lib::api::fetch::APIClient;
 // tokio runtime
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let client = APIClient::new(String::from("https://www.youtube.com/watch?v=x4eNrwR4FyI"))?;
-    let info = client.request().await;
+    let client = APIClient::new(String::from(" https://www.youtube.com/watch?v=4dvf6kM70qM"), String::from("mp3"))?;
+    let info = client.fetch_video_info().await;
     // match for Info
     match info {
         Ok(info) => {

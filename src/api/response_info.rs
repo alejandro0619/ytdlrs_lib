@@ -6,10 +6,12 @@ type VideoKeys = HashMap<String, String>;
 // Model of the data returned when fetching the video information, quality, and keys.
 #[derive(Serialize, Deserialize, Debug)]
 pub struct APIResponseInfo {
-    a: String,
+    #[serde(rename = "a")]
+    account: String,
     links: Link,
     pub mess: String,
-    p: String,
+    #[serde(rename = "p")]
+    process: String,
     status: String,
     t: i32,
     title: String,
@@ -30,8 +32,8 @@ impl Link {
         let mut keys: VideoKeys = HashMap::new();
        
             for (_, v) in info.iter() {
-               // check if v is not empty if contains k and q
-               if !v.is_empty() && v.contains_key("k") && v.contains_key("o") {
+               // check if v is not empty and if contains k and q
+               if !v.is_empty() && v.contains_key("k") && v.contains_key("q") {
                    keys.insert(v["q"].clone(), v["k"].clone());
                } else {
                    return Err(Error::VideoKeysError);
@@ -48,5 +50,17 @@ impl APIResponseInfo {
             Link::MP4(info) => Link::get_keys(info),
             Link::MP3(info) => Link::get_keys(info),
         }
+    }
+    // Some getter functions to gather general information about the video.
+    pub fn get_title(&self) -> String {
+        String::from(&self.title)
+    }
+
+    pub fn get_video_id(&self) -> String {
+        String::from(&self.vid)
+    }
+
+    pub fn get_account(&self) -> String {
+        String::from(&self.account)
     }
 }
