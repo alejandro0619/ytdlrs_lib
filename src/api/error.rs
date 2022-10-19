@@ -26,4 +26,10 @@ pub enum Error {
     InvalidQuality(String),
     #[error("Invalid file type: {0}")]
     InvalidFileType(String),
+    #[error("Error downloading the {0}")]
+    DownloadError(String),
+    #[error("Error creating the directory at: {0}")]
+    CreateDirError(String),
+    #[error("Error creating the file at: {0}")]
+    CreateFileError(String),
 }
