@@ -32,4 +32,8 @@ pub enum Error {
     CreateDirError(String),
     #[error("Error creating the file at: {0}")]
     CreateFileError(String),
+    #[error("Cannot build Downloader without a url")]
+    MissingUrl,
+    #[error("Cannot build Downloader without a file name")]
+    MissingFileName,
 }
