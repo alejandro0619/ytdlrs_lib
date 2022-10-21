@@ -36,4 +36,8 @@ pub enum Error {
     MissingUrl,
     #[error("Cannot build Downloader without a file name")]
     MissingFileName,
+    #[error("Cannot build the Client without the video id")]
+    MissingVideoId,
+    #[error("Cannot build the Client without the video type")]
+    MissingVideoType
 }

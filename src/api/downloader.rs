@@ -26,10 +26,7 @@ impl DownloaderBuilder {
     pub fn build(&self) -> Result<Downloader, Error> {
         if let Some(url) = &self.url {
             if let Some(file_name) = &self.file_name {
-                Ok(Downloader {
-                    url: url.clone(),
-                    file_name: file_name.clone(),
-                })
+                Ok(Downloader::new(url.clone(), file_name.clone()))
             } else {
                 Err(Error::MissingFileName)
             }

@@ -29,7 +29,47 @@ pub struct APIClient {
     vt: String,
     id: String,
 }
-
+pub struct APIClientBuilder {
+    pub url: Option<String>,
+    pub vt: Option<String>,
+    pub id: Option<String>,
+}
+impl APIClientBuilder {
+    pub fn new() -> Self {
+        Self {
+            url: None,
+            vt: None,
+            id: None,
+        }
+    }
+    pub fn set_url(&mut self, url: String) -> &mut Self {
+        self.url = Some(url);
+        self
+    }
+    pub fn set_video_type(&mut self, vt: String) -> &mut Self {
+        self.vt = Some(vt);
+        self
+    }
+    pub fn set_video_id(&mut self, id: String) -> &mut Self {
+        self.id = Some(id);
+        self
+    }
+    pub fn build(&self) -> Result<APIClient, Error> {
+        if let Some(url) = &self.url {
+            if let Some(vt) = &self.vt {
+                if let Some(id) = &self.id {
+                    APIClient::new(url.clone(), vt.clone(), id.clone())
+                } else {
+                    Err(Error::MissingVideoId)
+                }
+            } else {
+                Err(Error::MissingVideoType)
+            }
+        } else {
+            Err(Error::MissingUrl)
+        }
+    }
+}
 impl APIClient {
     pub async fn fetch_video_info(&mut self) -> Result<APIResponseInfo, Error> {
         let url_base = self.base_url.url_base_info.clone();
@@ -92,7 +132,7 @@ impl APIClient {
 }
 // implement new for APiCient
 impl APIClient {
-    pub fn new(url: String, video_type: String) -> Result<Self, Error> {
+    pub fn new(url: String, video_type: String, id: String) -> Result<Self, Error> {
         let base_url: APIConfig = APIConfig::new()?;
         let client = reqwest::Client::new();
         Ok(APIClient {
@@ -100,7 +140,7 @@ impl APIClient {
             url,
             base_url,
             vt: video_type,
-            id: String::new(), // initialize empty strings for id.
+            id, 
         })
     }
 }
