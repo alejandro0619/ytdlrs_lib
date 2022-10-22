@@ -1,7 +1,7 @@
+use super::error::Error;
+use super::quality::{Quality, QualityAudio, QualityVideo};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use super::error::Error;
-use super::quality::{QualityAudio, QualityVideo, Quality};
 type FormatInfo = HashMap<String, HashMap<String, String>>;
 type VideoKeys = HashMap<String, String>;
 // Model of the data returned when fetching the video information, quality, and keys.
@@ -29,18 +29,18 @@ impl Link {
     /// Returns the video keys and the quality of the video.
     /// where the key is the quality and the value is the key.
     /// info is of type FormatInfo.
-    fn get_keys(info: &FormatInfo) ->Result<VideoKeys, Error> {
+    fn get_keys(info: &FormatInfo) -> Result<VideoKeys, Error> {
         let mut keys: VideoKeys = HashMap::new();
-       
-            for (_, v) in info.iter() {
-               // check if v is not empty and if contains k and q
-               if !v.is_empty() && v.contains_key("k") && v.contains_key("q") {
-                   keys.insert(v["q"].clone(), v["k"].clone());
-               } else {
-                   return Err(Error::VideoKeysError);
-               }
+
+        for (_, v) in info.iter() {
+            // check if v is not empty and if contains k and q
+            if !v.is_empty() && v.contains_key("k") && v.contains_key("q") {
+                keys.insert(v["q"].clone(), v["k"].clone());
+            } else {
+                return Err(Error::VideoKeysError);
             }
-            Ok(keys)
+        }
+        Ok(keys)
     }
 }
 
@@ -63,10 +63,10 @@ impl APIResponseInfo {
     pub fn get_unique_key_by_quality(&self, quality: String) -> Result<String, Error> {
         let keys = self.get_keys_by_quality()?;
         // check if quality is in the QualityAudio or QualityVideo
-        
+
         match self.links {
             Link::MP4(_) => {
-               let q = QualityVideo::get_quality(&quality)?;
+                let q = QualityVideo::get_quality(&quality)?;
                 Ok(keys[&q].clone())
             }
             Link::MP3(_) => {
@@ -74,7 +74,6 @@ impl APIResponseInfo {
                 Ok(keys[&q].clone())
             }
         }
-
     }
     pub fn get_video_id(&self) -> String {
         String::from(&self.vid)

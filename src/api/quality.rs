@@ -2,7 +2,7 @@ use super::error::Error;
 pub trait Quality {
     fn get_quality(quality: &str) -> Result<String, Error>;
 }
-pub enum QualityVideo { }
+pub enum QualityVideo {}
 
 pub enum QualityAudio {}
 
@@ -27,7 +27,7 @@ impl Quality for QualityVideo {
     }
 }
 
-impl Quality for  QualityAudio {
+impl Quality for QualityAudio {
     fn get_quality(quality: &str) -> Result<String, Error> {
         match quality {
             "64kbps" => Ok(String::from("64kbps")),
