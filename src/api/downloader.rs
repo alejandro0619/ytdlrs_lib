@@ -47,11 +47,26 @@ impl Downloader {
         Self { url, file_name }
     }
     pub async fn download(&self) -> Result<(), Error> {
-        let response = reqwest::get(self.url.clone()).await?;
-        let mut file = std::fs::File::create(self.file_name.clone())
-            .map_err(|e| Error::CreateFileError(e.to_string()))?;
-        let mut content = Cursor::new(response.bytes().await?);
-        std::io::copy(&mut content, &mut file).unwrap();
-        Ok(())
+        let response = reqwest::Client::builder()
+        .danger_accept_invalid_certs(true) // Workaround because the server is using a self-signed certificate
+        .build()?
+        .get(&self.url.clone())
+        .send()
+        .await?;
+        
+        // Checks if the response is succesfully made
+        if response.status().is_success() {
+            let bytes = response.bytes().await?; // Gets the bytes from the response
+
+            let mut file = std::fs::File::create(self.file_name.clone())
+                .map_err(|e| Error::CreateFileError(e.to_string()))?;
+                
+            let mut content = Cursor::new(bytes);
+            std::io::copy(&mut content, &mut file).unwrap();
+
+            Ok(())
+        } else {
+            Err(Error::DownloadError)
+        }
     }
 }
