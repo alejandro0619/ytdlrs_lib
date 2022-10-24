@@ -37,7 +37,7 @@ impl Link {
             if !v.is_empty() && v.contains_key("k") && v.contains_key("q") {
                 keys.insert(v["q"].clone(), v["k"].clone());
             } else {
-                return Err(Error::VideoKeysError);
+                return Err(Error::VideoKeys);
             }
         }
         Ok(keys)

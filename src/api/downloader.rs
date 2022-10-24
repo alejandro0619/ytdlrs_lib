@@ -8,6 +8,11 @@ pub struct DownloaderBuilder {
     pub file_name: Option<String>,
 }
 
+impl Default for DownloaderBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl DownloaderBuilder {
     pub fn new() -> Self {
         Self {
@@ -59,14 +64,14 @@ impl Downloader {
             let bytes = response.bytes().await?; // Gets the bytes from the response
 
             let mut file = std::fs::File::create(self.file_name.clone())
-                .map_err(|e| Error::CreateFileError(e.to_string()))?;
+                .map_err(|e| Error::CreateFileFailed(e.to_string()))?;
                 
             let mut content = Cursor::new(bytes);
             std::io::copy(&mut content, &mut file).unwrap();
 
             Ok(())
         } else {
-            Err(Error::DownloadError)
+            Err(Error::DownloadFailed)
         }
     }
 }

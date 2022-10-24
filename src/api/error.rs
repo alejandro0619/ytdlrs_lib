@@ -5,33 +5,33 @@ use thiserror;
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("Error parsing the response data: Check the URL")]
-    ParseError,
+    Parse,
     #[error("Invalid response from the server")]
     InvalidResponse,
     #[error("Error deserializing the environment variables")]
-    EnvError(#[from] envy::Error),
+    Env(#[from] envy::Error),
     #[error("Error initializing the client")]
-    ClientError,
+    Client,
     #[error("Request went wrong")]
-    RequestError(#[from] reqwest::Error),
+    Request(#[from] reqwest::Error),
     #[error("Could not deserialize the data into JSON")]
-    DeserializeError,
+    Deserialize,
     #[error("Error getting the video keys")]
-    VideoKeysError,
+    VideoKeys,
     #[error("Invalidd video: Does not exist or is private")]
     InvalidVideo,
     #[error("Error converting the video")]
-    ConvertError,
+    ConvertFailed,
     #[error("Invalid quality: {0}")]
     InvalidQuality(String),
     #[error("Invalid file type: {0}")]
     InvalidFileType(String),
     #[error("Error downloading the file")]
-    DownloadError,
+    DownloadFailed,
     #[error("Error creating the directory at: {0}")]
-    CreateDirError(String),
+    CreateDirFailed(String),
     #[error("Error creating the file at: {0}")]
-    CreateFileError(String),
+    CreateFileFailed(String),
     #[error("Cannot build Downloader without a url")]
     MissingUrl,
     #[error("Cannot build Downloader without a file name")]
@@ -39,5 +39,9 @@ pub enum Error {
     #[error("Cannot build the Client without the video id")]
     MissingVideoId,
     #[error("Cannot build the Client without the video type")]
-    MissingVideoType
+    MissingVideoType,
+    #[error("Video's Id is missing")]
+    MissingId,
+    #[error("Video's Title is missing")]
+    MissingTitle,
 }
