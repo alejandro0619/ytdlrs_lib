@@ -10,7 +10,7 @@ use reqwest::header::CONTENT_TYPE;
 
 impl APIClient {
     pub async fn fetch_video_info(&mut self) -> Result<APIResponseInfo, Error> {
-        let url_base = self.get_base_url().url_base_info;
+        let url_base = self.get_env().url_base_info;
 
         // we check if the file type is mp3 or mp4.
         let file_type = FileType::get_file_type(&self.get_vt())?;
@@ -42,7 +42,7 @@ impl APIClient {
 
 impl APIClient {
     pub async fn fetch_convert_video(&self, k: &str) -> Result<APIResponseConvert, Error> {
-        let url_base = self.get_base_url().url_base_download;
+        let url_base = self.get_env().url_base_download;
 
         // These are the params, vt = video_type.
 

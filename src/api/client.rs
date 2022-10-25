@@ -51,7 +51,7 @@ impl APIClient {
     pub fn get_url(&self) -> String {
         self.url.clone()
     }
-    pub fn get_base_url(&self) -> APIConfig {
+    pub fn get_env(&self) -> APIConfig {
         self.base_url.clone()
     }
     pub fn get_vt(&self) -> String {
