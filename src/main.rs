@@ -13,7 +13,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
   let video_key = res
     .fetch_video_info()
     .await?
-    .get_unique_key_by_quality(String::from("480p"))?;
+    .get_unique_key_by_quality(String::from("720p"))?;
   
   // Now we can get information about the conversion of the video by it's key, such as the download link.
   let video_info = res

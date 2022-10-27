@@ -44,4 +44,6 @@ pub enum Error {
     MissingId,
     #[error("Video's Title is missing")]
     MissingTitle,
+    #[error("Video does not have the quality requested")]
+    MissingQuality,
 }

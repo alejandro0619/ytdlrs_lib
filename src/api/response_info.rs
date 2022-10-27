@@ -67,11 +67,17 @@ impl APIResponseInfo {
         match self.links {
             Link::MP4(_) => {
                 let q = QualityVideo::get_quality(&quality)?;
-                Ok(keys[&q].clone())
+
+                keys.get(&q)
+                    .ok_or(Error::MissingQuality)
+                    .map(|s| s.to_string())
             }
             Link::MP3(_) => {
                 let q = QualityAudio::get_quality(&quality)?;
-                Ok(keys[&q].clone())
+                
+                keys.get(&q)
+                    .ok_or(Error::MissingQuality)
+                    .map(|s| s.to_string())
             }
         }
     }
