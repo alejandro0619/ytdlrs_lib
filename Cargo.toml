@@ -14,7 +14,3 @@ dotenv = "0.15.0"
 envy = "0.4.2"
 url = "2.3.1"
 thiserror = "1.0.37"
-
-[[bin]]
-name = "ytdlrs"
-path = "src/main.rs"
