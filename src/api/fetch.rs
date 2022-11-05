@@ -1,15 +1,13 @@
-
+use super::client::APIClient;
 use super::convert_video::APIResponseConvert;
 use super::error::Error;
 use super::quality::FileType;
 use super::response_info::APIResponseInfo;
-use super::client::APIClient;
 
 use reqwest::header::CONTENT_TYPE;
 
-
 impl APIClient {
-    pub async fn fetch_video_info(&mut self) -> Result<APIResponseInfo, Error> {
+    pub fn fetch_video_info(&mut self) -> Result<APIResponseInfo, Error> {
         let url_base = self.get_env().url_base_info;
 
         // we check if the file type is mp3 or mp4.
@@ -23,10 +21,8 @@ impl APIClient {
             .form(&params)
             .header(CONTENT_TYPE, "application/json")
             .send()
-            .await
             .map_err(Error::Request)? // Returns error if request fails
             .json::<APIResponseInfo>()
-            .await
             .map_err(|_| Error::Deserialize)?; // Tries to deserialize the response data into APIResponseInfo
 
         self.set_id(response_data.get_video_id()); // Get the video id and set it to self.id
@@ -41,7 +37,7 @@ impl APIClient {
 }
 
 impl APIClient {
-    pub async fn fetch_convert_video(&self, k: &str) -> Result<APIResponseConvert, Error> {
+    pub fn fetch_convert_video(&self, k: &str) -> Result<APIResponseConvert, Error> {
         let url_base = self.get_env().url_base_download;
 
         // These are the params, vt = video_type.
@@ -55,10 +51,8 @@ impl APIClient {
             .form(&params)
             .header(CONTENT_TYPE, "application/json")
             .send()
-            .await
             .map_err(Error::Request)? // Returns error if request fails
             .json::<APIResponseConvert>()
-            .await
             .map_err(|_| Error::Deserialize)?; // Tries to deserialize the response data into APIResponseInfo
 
         if !response_data.get_mess().is_empty() {
@@ -68,6 +62,3 @@ impl APIClient {
         }
     }
 }
-
-
-

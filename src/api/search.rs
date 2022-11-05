@@ -1,9 +1,9 @@
 use super::error::Error;
+use reqwest::{blocking::Client, header::CONTENT_TYPE};
 use serde::{Deserialize, Serialize};
-use reqwest::{Client, header::CONTENT_TYPE};
 use std::collections::HashMap;
 
-type VideoId = String; 
+type VideoId = String;
 type VideoTitle = String;
 type APIResponseSearchItem = HashMap<VideoId, VideoTitle>; // Afterall it's a HashMap of String, String, but this is more readable
 
@@ -16,7 +16,7 @@ pub struct APIResponseSearch {
     process: String,
     items: Vec<APIResponseSearchItem>,
     #[serde(skip)]
-    url: String
+    url: String,
 }
 // setter for url:
 impl APIResponseSearch {
@@ -45,23 +45,21 @@ impl APIResponseSearch {
 pub struct SearchVideo {}
 
 impl SearchVideo {
-  pub async fn search_video(query: String) -> Result<APIResponseSearch, Error>{
-    let client = Client::new();
-    let url = String::from("https://9convert.com/api/ajaxSearch/index");
+    pub fn search_video(query: String) -> Result<APIResponseSearch, Error> {
+        let client = Client::new();
+        let url = String::from("https://9convert.com/api/ajaxSearch/index");
 
-    let params = [("query", query)];
-    let response_data = client
-        .post(url)
-        .form(&params)
-        .header(CONTENT_TYPE, "application/json")
-        .send()
-        .await
-        .map_err(Error::Request)?
-        .json::<APIResponseSearch>()
-        .await
-        .map_err(|_| Error::Deserialize)?;
+        let params = [("query", query)];
+        let response_data = client
+            .post(url)
+            .form(&params)
+            .header(CONTENT_TYPE, "application/json")
+            .send()
+            .map_err(Error::Request)?
+            .json::<APIResponseSearch>()
+            .map_err(|_| Error::Deserialize)?;
 
-    Ok(response_data)
-    
+        Ok(response_data)
+    }
 }
-}
+

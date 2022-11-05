@@ -17,7 +17,7 @@ impl APIConfig {
 }
 
 pub struct APIClient {
-    client: reqwest::Client,
+    client: reqwest::blocking::Client,
     url: String,
     base_url: APIConfig,
     vt: String,
@@ -25,17 +25,17 @@ pub struct APIClient {
 }
 // implement new for APiCient
 impl APIClient {
-  pub fn new(url: String, video_type: String, id: String) -> Result<Self, Error> {
-      let base_url: APIConfig = APIConfig::new()?;
-      let client = reqwest::Client::new();
-      Ok(Self {
-          client,
-          url,
-          base_url,
-          vt: video_type,
-          id, 
-      })
-  }
+    pub fn new(url: String, video_type: String, id: String) -> Result<Self, Error> {
+        let base_url: APIConfig = APIConfig::new()?;
+        let client = reqwest::blocking::Client::new();
+        Ok(Self {
+            client,
+            url,
+            base_url,
+            vt: video_type,
+            id,
+        })
+    }
 }
 //setter for id:
 impl APIClient {
@@ -45,7 +45,7 @@ impl APIClient {
 }
 // getter for every field:
 impl APIClient {
-    pub fn get_client(&self) -> reqwest::Client {
+    pub fn get_client(&self) -> reqwest::blocking::Client {
         self.client.clone()
     }
     pub fn get_url(&self) -> String {
@@ -68,42 +68,43 @@ pub struct APIClientBuilder {
 }
 impl Default for APIClientBuilder {
     fn default() -> Self {
-       Self::new()
+        Self::new()
     }
 }
 impl APIClientBuilder {
-  pub fn new() -> Self {
-      Self {
-          url: None,
-          vt: None,
-          id: None,
-      }
-  }
-  pub fn set_url(&mut self, url: String) -> &mut Self {
-      self.url = Some(url);
-      self
-  }
-  pub fn set_video_type(&mut self, vt: String) -> &mut Self {
-      self.vt = Some(vt);
-      self
-  }
-  pub fn set_video_id(&mut self, id: String) -> &mut Self {
-      self.id = Some(id);
-      self
-  }
-  pub fn build(&self) -> Result<APIClient, Error> {
-      if let Some(url) = &self.url {
-          if let Some(vt) = &self.vt {
-              if let Some(id) = &self.id {
-                  APIClient::new(url.clone(), vt.clone(), id.clone())
-              } else {
-                  Err(Error::MissingVideoId)
-              }
-          } else {
-              Err(Error::MissingVideoType)
-          }
-      } else {
-          Err(Error::MissingUrl)
-      }
-  }
+    pub fn new() -> Self {
+        Self {
+            url: None,
+            vt: None,
+            id: None,
+        }
+    }
+    pub fn set_url(&mut self, url: String) -> &mut Self {
+        self.url = Some(url);
+        self
+    }
+    pub fn set_video_type(&mut self, vt: String) -> &mut Self {
+        self.vt = Some(vt);
+        self
+    }
+    pub fn set_video_id(&mut self, id: String) -> &mut Self {
+        self.id = Some(id);
+        self
+    }
+    pub fn build(&self) -> Result<APIClient, Error> {
+        if let Some(url) = &self.url {
+            if let Some(vt) = &self.vt {
+                if let Some(id) = &self.id {
+                    APIClient::new(url.clone(), vt.clone(), id.clone())
+                } else {
+                    Err(Error::MissingVideoId)
+                }
+            } else {
+                Err(Error::MissingVideoType)
+            }
+        } else {
+            Err(Error::MissingUrl)
+        }
+    }
 }
+
