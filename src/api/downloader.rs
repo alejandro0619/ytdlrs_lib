@@ -55,7 +55,7 @@ impl Downloader {
         let response = reqwest::blocking::Client::builder()
             .danger_accept_invalid_certs(true) // Workaround because the server is using a self-signed certificate
             .build()?
-            .get(&self.url.clone())
+            .get(self.url.clone())
             .send()?;
 
         // Checks if the response is succesfully made

@@ -21,12 +21,12 @@ pub struct APIResponseSearch {
 // setter for url:
 impl APIResponseSearch {
     pub fn set_url(&mut self, id: String) {
-        self.url = format!("https://www.youtube.com/{}", id);
+        self.url = format!("https://www.youtube.com/{id}");
     }
 }
 impl APIResponseSearch {
-    pub fn get_status(&self) -> String {
-        self.status.clone()
+    pub fn get_items(&self) -> Vec<APIResponseSearchItem> {
+        self.items.clone()
     }
     pub fn get_message(&self) -> String {
         self.message.clone()
@@ -34,8 +34,8 @@ impl APIResponseSearch {
     pub fn get_process(&self) -> String {
         self.process.clone()
     }
-    pub fn get_items(&self) -> Vec<APIResponseSearchItem> {
-        self.items.clone()
+    pub fn get_status(&self) -> String {
+        self.status.clone()
     }
     pub fn get_url(&self) -> String {
         self.url.clone()

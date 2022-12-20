@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 type FormatInfo = HashMap<String, HashMap<String, String>>;
 type VideoKeys = HashMap<String, String>;
-// Model of the data returned when fetching the video information, quality, and keys.
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct APIResponseInfo {
     #[serde(rename = "a")]
@@ -32,14 +32,11 @@ impl Link {
     fn get_keys(info: &FormatInfo) -> Result<VideoKeys, Error> {
         let mut keys: VideoKeys = HashMap::new();
 
-        for (_, v) in info.iter() {
-            // check if v is not empty and if contains k and q
-            if !v.is_empty() && v.contains_key("k") && v.contains_key("q") {
-                keys.insert(v["q"].clone(), v["k"].clone());
-            } else {
-                return Err(Error::VideoKeys);
-            }
-        }
+        info.iter()
+            .filter(|(_, video)| !video.is_empty() && video.contains_key("k") && video.contains_key("q"))
+            .for_each(|(_, video)| {
+                keys.insert(video["q"].clone(), video["k"].clone());
+        });
         Ok(keys)
     }
 }

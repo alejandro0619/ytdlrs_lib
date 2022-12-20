@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .build()?
         .download()?;
 
-    // If we don't know what the direct link of the video is, we can search for a name and get a couple (12) of results.
+    // If we don't know what the direct link of the video is, we can search for a name and get 12 results.
     let searched_videos = SearchVideo::search_video(String::from("Rust CLI"))?.get_items();
 
     // We can loop over the vector and get the video id and the title.
