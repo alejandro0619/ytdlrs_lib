@@ -57,7 +57,7 @@ impl SearchVideo {
             .send()
             .map_err(Error::Request)?
             .json::<APIResponseSearch>()
-            .map_err(|_| Error::Deserialize)?;
+            .map_err(|_| Error::DeserializeSearch)?;
 
         Ok(response_data)
     }

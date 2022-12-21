@@ -14,11 +14,15 @@ pub enum Error {
     Client,
     #[error("Request went wrong")]
     Request(#[from] reqwest::Error),
-    #[error("Could not deserialize the data into JSON")]
-    Deserialize,
+    #[error("Could not deserialize the info data into JSON")]
+    DeserializeInfo,
+    #[error("Could not deserialize the convertion data into JSOn")]
+    DeserializeConvertion,
+    #[error("Could not deserialize the convertion data into JSOn")]
+    DeserializeSearch,
     #[error("Error getting the video keys")]
     VideoKeys,
-    #[error("Invalidd video: Does not exist or is private")]
+    #[error("Invalid video: Does not exist or is private")]
     InvalidVideo,
     #[error("Error converting the video")]
     ConvertFailed,

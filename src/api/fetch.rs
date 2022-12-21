@@ -23,7 +23,7 @@ impl APIClient {
             .send()
             .map_err(Error::Request)? // Returns error if request fails
             .json::<APIResponseInfo>()
-            .map_err(|_| Error::Deserialize)?; // Tries to deserialize the response data into APIResponseInfo
+            .map_err(|_| Error::DeserializeInfo)?; // Tries to deserialize the response data into APIResponseInfo
 
         // If the mess is empty means it all went well.
         if !response_data.mess.is_empty() {
@@ -51,7 +51,7 @@ impl APIClient {
             .send()
             .map_err(Error::Request)? // Returns error if request fails
             .json::<APIResponseConvert>()
-            .map_err(|_| Error::Deserialize)?; // Tries to deserialize the response data into APIResponseInfo
+            .map_err(|_| Error::DeserializeConvertion)?; // Tries to deserialize the response data into APIResponseInfo
 
         if !response_data.get_mess().is_empty() {
             Err(Error::ConvertFailed)
