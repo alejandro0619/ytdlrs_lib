@@ -33,10 +33,12 @@ impl Link {
         let mut keys: VideoKeys = HashMap::new();
 
         info.iter()
-            .filter(|(_, video)| !video.is_empty() && video.contains_key("k") && video.contains_key("q"))
+            .filter(|(_, video)| {
+                !video.is_empty() && video.contains_key("k") && video.contains_key("q")
+            })
             .for_each(|(_, video)| {
                 keys.insert(video["q"].clone(), video["k"].clone());
-        });
+            });
         Ok(keys)
     }
 }
@@ -71,7 +73,7 @@ impl APIResponseInfo {
             }
             Link::MP3(_) => {
                 let q = QualityAudio::get_quality(&quality)?;
-                
+
                 keys.get(&q)
                     .ok_or(Error::MissingQuality)
                     .map(|s| s.to_string())

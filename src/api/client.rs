@@ -79,15 +79,13 @@ impl APIClientBuilder {
             id: None,
         }
     }
-    pub fn set_url(&mut self, url: String) -> &mut Self {
-        self.url = Some(url);
-        self
-    }
     pub fn set_video_type(&mut self, vt: String) -> &mut Self {
         self.vt = Some(vt);
         self
     }
     pub fn set_video_id(&mut self, id: String) -> &mut Self {
+        self.url = Some(format!("https://www.youtube.com/watch?v={}", &id)); // we set the whole url here automatically
+        dbg!(&self.url);
         self.id = Some(id);
         self
     }
@@ -107,4 +105,3 @@ impl APIClientBuilder {
         }
     }
 }
-

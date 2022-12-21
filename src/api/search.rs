@@ -62,4 +62,3 @@ impl SearchVideo {
         Ok(response_data)
     }
 }
-

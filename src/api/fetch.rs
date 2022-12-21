@@ -7,7 +7,7 @@ use super::response_info::APIResponseInfo;
 use reqwest::header::CONTENT_TYPE;
 
 impl APIClient {
-    pub fn fetch_video_info(&mut self) -> Result<APIResponseInfo, Error> {
+    pub fn fetch_video_info(&self) -> Result<APIResponseInfo, Error> {
         let url_base = self.get_env().url_base_info;
 
         // we check if the file type is mp3 or mp4.
@@ -24,8 +24,6 @@ impl APIClient {
             .map_err(Error::Request)? // Returns error if request fails
             .json::<APIResponseInfo>()
             .map_err(|_| Error::Deserialize)?; // Tries to deserialize the response data into APIResponseInfo
-
-        self.set_id(response_data.get_video_id()); // Get the video id and set it to self.id
 
         // If the mess is empty means it all went well.
         if !response_data.mess.is_empty() {

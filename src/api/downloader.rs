@@ -1,6 +1,7 @@
 use super::error::Error;
+use reqwest::blocking;
 use serde::{Deserialize, Serialize};
-use std::io::Cursor;
+use std::{fs::File, io::Cursor};
 
 #[derive(Clone)]
 pub struct DownloaderBuilder {
@@ -52,7 +53,7 @@ impl Downloader {
         Self { url, file_name }
     }
     pub fn download(&self) -> Result<(), Error> {
-        let response = reqwest::blocking::Client::builder()
+        let response = blocking::Client::builder()
             .danger_accept_invalid_certs(true) // Workaround because the server is using a self-signed certificate
             .build()?
             .get(self.url.clone())
@@ -62,7 +63,7 @@ impl Downloader {
         if response.status().is_success() {
             let bytes = response.bytes()?; // Gets the bytes from the response
 
-            let mut file = std::fs::File::create(self.file_name.clone())
+            let mut file = File::create(self.file_name.clone())
                 .map_err(|e| Error::CreateFileFailed(e.to_string()))?;
 
             let mut content = Cursor::new(bytes);
