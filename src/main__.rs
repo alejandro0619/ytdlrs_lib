@@ -11,7 +11,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Using the API Client we can fetch the video info. And using a method we can get the key to download the video.
     let video_info = res
-        .fetch_video_info()?
+        .fetch_info()?
         .get_unique_key_by_quality(String::from("480p"))?;
 
     let video_info = res.fetch_convert_video(&video_info).unwrap();

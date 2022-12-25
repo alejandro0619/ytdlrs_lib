@@ -1,6 +1,5 @@
 // public modules
 pub mod client;
-pub mod convert_video;
 pub mod downloader;
 pub mod fetch;
 pub mod search;
@@ -8,3 +7,4 @@ pub mod search;
 mod error;
 mod quality;
 mod response_info;
+mod convert_video;

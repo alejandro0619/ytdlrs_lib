@@ -7,7 +7,12 @@ use super::response_info::APIResponseInfo;
 use reqwest::header::CONTENT_TYPE;
 
 impl APIClient {
-    pub fn fetch_video_info(&self) -> Result<APIResponseInfo, Error> {
+    /// Returns the fetch info of this [`APIClient`].
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if the Request fails | Deserialize fails .
+    pub fn fetch_info(&self) -> Result<APIResponseInfo, Error> {
         let url_base = self.get_env().url_base_info;
 
         // we check if the file type is mp3 or mp4.
