@@ -67,14 +67,14 @@ impl APIResponseInfo {
             Link::MP4(_) => {
                 let q = QualityVideo::get_quality(&quality)?;
 
-                keys.get(&q)
+               keys.get(&q.to_string())
                     .ok_or(Error::MissingQuality)
                     .map(|s| s.to_string())
             }
             Link::MP3(_) => {
                 let q = QualityAudio::get_quality(&quality)?;
 
-                keys.get(&q)
+                keys.get(&q.to_string())
                     .ok_or(Error::MissingQuality)
                     .map(|s| s.to_string())
             }

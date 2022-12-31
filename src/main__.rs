@@ -1,5 +1,7 @@
 use ytdlrs_lib::api::{
-    client::APIClientBuilder, downloader::DownloaderBuilder, search::SearchVideo,
+    client::APIClientBuilder, 
+    downloader::DownloaderBuilder, 
+    search::SearchVideo,
 };
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
