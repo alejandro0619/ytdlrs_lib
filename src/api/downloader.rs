@@ -56,14 +56,14 @@ impl Downloader {
         let response = blocking::Client::builder()
             .danger_accept_invalid_certs(true) // Workaround because the server is using a self-signed certificate
             .build()?
-            .get(self.url.clone())
+            .get(self.url)
             .send()?;
 
         // Checks if the response is succesfully made
         if response.status().is_success() {
             let bytes = response.bytes()?; // Gets the bytes from the response
 
-            let mut file = File::create(self.file_name.clone())
+            let mut file = File::create(self.file_name)
                 .map_err(|e| Error::CreateFileFailed(e.to_string()))?;
 
             let mut content = Cursor::new(bytes);

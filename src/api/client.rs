@@ -2,8 +2,10 @@ use super::error::Error;
 use dotenv;
 use envy;
 use serde::Deserialize;
+use reqwest::blocking;
 
 #[derive(Deserialize, Clone)]
+
 pub struct APIConfig {
     pub url_base_info: String,
     pub url_base_download: String,
@@ -45,20 +47,20 @@ impl APIClient {
 }
 // getter for every field:
 impl APIClient {
-    pub fn get_client(&self) -> reqwest::blocking::Client {
+    pub fn get_client(&self) -> blocking::Client {
         self.client.clone()
     }
-    pub fn get_url(&self) -> String {
-        self.url.clone()
+    pub fn get_url<'a>(&self) -> &'a str {
+        &self.url
     }
     pub fn get_env(&self) -> APIConfig {
-        self.base_url.clone()
+        self.base_url
     }
-    pub fn get_vt(&self) -> String {
-        self.vt.clone()
+    pub fn get_vt<'a>(&self) -> &'a str {
+        &self.vt
     }
-    pub fn get_id(&self) -> String {
-        self.id.clone()
+    pub fn get_id<'a>(&self) -> &'a str {
+        &self.id
     }
 }
 pub struct APIClientBuilder {
