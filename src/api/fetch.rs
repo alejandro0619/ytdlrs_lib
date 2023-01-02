@@ -13,12 +13,12 @@ impl APIClient {
     ///
     /// This function will return an error if the Request fails | Deserialize fails .
     pub fn fetch_info(&self) -> Result<APIResponseInfo, Error> {
-        let url_base = self.get_env().url_base_info;
+        let url_base = &self.get_env().url_base_info;
 
         // we check if the file type is mp3 or mp4.
         let file_type = FileType::get_file_type(&self.get_vt())?;
 
-        let params: [(&str, String); 2] = [("query", self.get_url()), ("vt", file_type)]; // params for the request
+        let params: [(&str, &str); 2] = [("query", self.get_url()), ("vt", &file_type)]; // params for the request
         let client = &self.get_client(); // Initialize the client
 
         let response_data = client
@@ -41,11 +41,11 @@ impl APIClient {
 
 impl APIClient {
     pub fn fetch_convert_video(&self, k: &str) -> Result<APIResponseConvert, Error> {
-        let url_base = self.get_env().url_base_download;
+        let url_base = &self.get_env().url_base_download;
 
         // These are the params, vt = video_type.
 
-        let params = [("vid", self.get_id()), ("k", String::from(k))];
+        let params = [("vid", self.get_id()), ("k", k)];
 
         let client = &self.get_client(); // Initialize the client
 

@@ -50,16 +50,16 @@ impl APIClient {
     pub fn get_client(&self) -> blocking::Client {
         self.client.clone()
     }
-    pub fn get_url<'a>(&self) -> &'a str {
+    pub fn get_url<'a>(&'a self) -> &'a str {
         &self.url
     }
-    pub fn get_env(&self) -> APIConfig {
-        self.base_url
+    pub fn get_env(&self) -> &APIConfig {
+        &self.base_url
     }
-    pub fn get_vt<'a>(&self) -> &'a str {
+    pub fn get_vt<'a>(&'a self) -> &'a str {
         &self.vt
     }
-    pub fn get_id<'a>(&self) -> &'a str {
+    pub fn get_id<'a>(&'a self) -> &'a str {
         &self.id
     }
 }
