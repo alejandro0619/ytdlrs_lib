@@ -1,3 +1,4 @@
+// example file to test some functions, don't use and delete if you want
 use ytdlrs_lib::api::{
     client::APIClientBuilder, 
     downloader::DownloaderBuilder, 
